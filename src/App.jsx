@@ -1,22 +1,14 @@
 import { useEffect } from 'react'
+import { Route, Routes, useLocation } from 'react-router-dom'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Navbar from './components/Navbar'
-import ScrollDownIndicator from './components/ScrollDownIndicator'
-import BottleIntro from './components/BottleIntro'
-import Hero from './components/Hero'
-import AboutSection from './components/AboutSection'
-import SunSection from './components/SunSection'
-import MountainSection from './components/MountainSection'
-import CloudHeadline from './components/CloudHeadline'
-import WaterfallSection from './components/WaterfallSection'
-import BlueSpringSection from './components/BlueSpringSection'
-import PeakFlowSection from './components/PeakFlowSection'
-import NatureSipSection from './components/NatureSipSection'
-import Footer from './components/Footer'
+import Home from './pages/Home'
+import Products from './pages/Products'
 import { useSmoothScroll, useViewportHeight } from './hooks/useSmoothScroll'
 
 const App = () => {
   const lenis = useSmoothScroll()
+  const { pathname } = useLocation()
   useViewportHeight()
 
   useEffect(() => {
@@ -25,23 +17,19 @@ const App = () => {
     return () => window.removeEventListener('load', onLoad)
   }, [])
 
+  useEffect(() => {
+    if (lenis) lenis.scrollTo(0, { immediate: true })
+    else window.scrollTo(0, 0)
+    ScrollTrigger.refresh()
+  }, [pathname, lenis])
+
   return (
     <div className="relative">
       <Navbar lenis={lenis} />
-      <div className="relative">
-        <ScrollDownIndicator />
-        <BottleIntro />
-        <Hero />
-        <AboutSection />
-        <SunSection />
-        <MountainSection />
-        <CloudHeadline />
-        <WaterfallSection />
-        <BlueSpringSection />
-        <PeakFlowSection />
-        <NatureSipSection />
-        <Footer />
-      </div>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/products" element={<Products />} />
+      </Routes>
     </div>
   )
 }
